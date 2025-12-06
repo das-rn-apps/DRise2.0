@@ -13,10 +13,10 @@ import Login from "./routes/Login";
 import Signup from "./routes/Signup";
 import Profile from "./routes/Profile";
 
-import { useAuthStore } from "./store/authStore";
+import { useAuthStore, type AuthState } from "./store/authStore";
 
 const App: React.FC = () => {
-  const token = useAuthStore((s: { token: any }) => s.token);
+  const token = useAuthStore((s: AuthState) => s.token);
 
   return (
     <div className="min-h-screen flex flex-col bg-linear-to-br from-indigo-50 via-white to-pink-50">

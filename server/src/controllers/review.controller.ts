@@ -4,7 +4,7 @@ import ReviewModel from "../models/Review.js";
 import CourseModel from "../models/Course.js";
 
 export const addReview = async (req: Request, res: Response): Promise<void> => {
-    const userId = (req as any).user?.id;
+    const userId = (req as any).user?._id;
     const { courseId, rating, comment } = req.body;
     if (!userId) { res.status(401).json({ success: false, message: "Unauthorized" }); return; }
 

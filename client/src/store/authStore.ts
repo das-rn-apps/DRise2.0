@@ -3,7 +3,8 @@ import { persist } from "zustand/middleware";
 import type { IUser } from "../utils/types";
 
 
-interface AuthState {
+export interface AuthState {
+    isLoading: boolean;
     token: string | null;
     user: IUser | null;
     setToken: (t: string | null) => void;
@@ -14,6 +15,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
     persist(
         (set) => ({
+            isLoading: false,
             token: localStorage.getItem("token"),
             user: JSON.parse(localStorage.getItem("user") || "null"),
             setToken: (t) => {

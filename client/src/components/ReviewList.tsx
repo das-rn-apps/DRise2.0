@@ -10,10 +10,10 @@ import {
 } from "lucide-react";
 
 const ReviewList: React.FC<{ courseId: string }> = ({ courseId }) => {
-    const [reviews, setReviews] = useState<IReview[]>([]);
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState("");
     const token = useAuthStore((s) => s.token);
+    const [reviews, setReviews] = useState<IReview[]>([]);
 
     useEffect(() => {
         (async () => {

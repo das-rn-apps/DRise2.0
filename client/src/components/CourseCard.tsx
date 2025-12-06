@@ -18,7 +18,7 @@ const CourseCard: React.FC<{ course: ICourse }> = ({ course }) => {
                 <img
                     src={
                         course.thumbnail ||
-                        `https://picsum.photos/seed/${course._id}/600/400`
+                        `https://picsum.photos/seed/${course._id}/200/200`
                     }
                     alt={course.title}
                     className="

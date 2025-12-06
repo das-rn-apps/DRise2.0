@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import CourseModel from "../models/Course.js";
 import ChapterModel from "../models/Chapter.js";
 import { generateSlug } from "../utils/slug.js";
+import EnrollmentModel from "../models/Enrollment.js";
+
 
 export const createCourse = async (req: Request, res: Response): Promise<void> => {
     const { title, description, price, published } = req.body;
@@ -44,4 +46,53 @@ export const deleteCourse = async (req: Request, res: Response): Promise<void> =
     const { id } = req.params;
     await CourseModel.findByIdAndDelete(id);
     res.json({ success: true, message: "Deleted" });
+};
+
+export const enrollCourse = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = (req as any).user?._id;
+        const { id: courseId } = req.params;
+
+        if (!userId) {
+            res.status(401).json({ success: false, message: "Unauthorized" });
+            return;
+        }
+
+        // Check if course exists
+        const course = await CourseModel.findById(courseId);
+        if (!course) {
+            res.status(404).json({ success: false, message: "Course not found" });
+            return;
+        }
+
+        // Check if user is already enrolled
+        const existingEnrollment = await EnrollmentModel.findOne({ user: userId, course: courseId });
+        if (existingEnrollment) {
+            res.json({ success: true, message: "Already enrolled", data: existingEnrollment });
+            return;
+        }
+
+        // Add user to course subscribers
+        await CourseModel.findByIdAndUpdate(
+            courseId,
+            { $addToSet: { subscribers: userId } },
+            { new: true }
+        );
+
+        // Create a new enrollment record
+        const enrollment = await EnrollmentModel.create({
+            user: userId,
+            course: courseId,
+            enrolledAt: new Date()
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Enrollment successful",
+            data: enrollment
+        });
+    } catch (error: any) {
+        console.error("Enroll error:", error);
+        res.status(500).json({ success: false, message: error.message || "Server error" });
+    }
 };

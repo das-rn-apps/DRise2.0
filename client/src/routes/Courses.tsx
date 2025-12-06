@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { getCourses } from "../api/course";
 import CourseCard from "../components/CourseCard";
-import type { ICourse } from "../utils/types";
 import { BookOpen } from "lucide-react";
+import { useCourseStore } from "../store/courseStore";
 
 const Courses: React.FC = () => {
-    const [courses, setCourses] = useState<ICourse[]>([]);
+    const { courses, setCourses } = useCourseStore();
 
     useEffect(() => {
+        if (courses.length > 0) return;
+
         (async () => {
             try {
                 const res = await getCourses();
@@ -16,7 +18,7 @@ const Courses: React.FC = () => {
                 console.error(err);
             }
         })();
-    }, []);
+    }, [courses, setCourses]);
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">

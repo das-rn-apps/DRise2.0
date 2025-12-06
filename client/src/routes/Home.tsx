@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { getCourses } from "../api/course";
 import CourseCard from "../components/CourseCard";
-import type { ICourse } from "../utils/types";
 import { Star } from "lucide-react";
+import { useCourseStore } from "../store/courseStore";
 
 const Home: React.FC = () => {
-    const [courses, setCourses] = useState<ICourse[]>([]);
+    const { courses, setCourses } = useCourseStore();
 
     useEffect(() => {
+        if (courses.length > 0) return; // fetch only if not already stored
+
         (async () => {
             try {
                 const res = await getCourses();
@@ -16,7 +18,8 @@ const Home: React.FC = () => {
                 console.error(err);
             }
         })();
-    }, []);
+    }, [courses, setCourses]);
+
 
     return (
         <div className="space-y-12">

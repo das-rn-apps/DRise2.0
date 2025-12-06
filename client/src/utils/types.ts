@@ -49,11 +49,12 @@ export interface ICourse {
     category: string;
     price: number;
     level: "beginner" | "intermediate" | "advanced";
-    instructor: string;
+    instructor: IUser;
     rating: number;
     totalLessons: number;
     lessons: ILesson[];
     reviews: IReview[];
+    subscribers: IUser[];
     createdAt?: string;
 }
 
@@ -73,6 +74,7 @@ export interface ICourseResponse {
 
 export interface ICourseDetailsResponse {
     course: ICourse;
+    chapters: IChapter[];
 }
 
 
@@ -206,3 +208,4 @@ export interface IChapter {
     message: string;
     statusCode: number;
 }
+
